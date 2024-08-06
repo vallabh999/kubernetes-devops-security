@@ -1,5 +1,31 @@
 pipeline {
-  agent any
+    agent {
+    kubernetes {
+      yaml '''
+        apiVersion: v1
+        kind: Pod
+        spec:
+          containers:
+          - name: maven
+            image: maven:alpine
+            command:
+            - cat
+            tty: true
+          - name: docker
+            image: docker:latest
+            command:
+            - cat
+            tty: true
+            volumeMounts:
+             - mountPath: /var/run/docker.sock
+               name: docker-sock
+          volumes:
+          - name: docker-sock
+            hostPath:
+              path: /var/run/docker.sock    
+        '''
+    }
+  }
   tools {
     maven 'maven3'
     docker 'docker'
@@ -8,13 +34,17 @@ pipeline {
   stages {
       stage('Build Artifact') {
             steps {
-              sh "mvn clean package -DskipTests=true"
-              archive 'target/*.jar' //so that they can be downloaded later
+              container ('maven'){
+                sh "mvn clean package -DskipTests=true"
+                archive 'target/*.jar' //so that they can be downloaded later
+              }
             }
       }
       stage('Unit test') {
             steps {
-              sh "mvn test"
+                container ('maven'){
+                sh "mvn test"
+                }  
             }
         post {
           always {
@@ -25,11 +55,13 @@ pipeline {
     }
     stage('Docker Build and Push'){
       steps{
-        withDockerRegistry([credentialsId: "docker-hub", url: ""]){
-        sh 'printenv'
-        sh 'docker build -t valabh4/numeric:"GIT_COMMIT" .'
-        sh 'docker push vallabh4/numeric:"GIT_COMMIT"'
-      }
+        container ('docker'){
+          withDockerRegistry([credentialsId: "docker-hub", url: ""]){
+            sh 'printenv'
+            sh 'docker build -t valabh4/numeric:"GIT_COMMIT" .'
+            sh 'docker push vallabh4/numeric:"GIT_COMMIT"'
+            }
+        }
       }
     }
 }
