@@ -22,5 +22,12 @@ pipeline {
           }
         }
     }
+    stage('Docker Build and Push'){
+      steps{
+        sh 'printenv'
+        sh 'docker build -t valabh4/numeric:"GIT_COMMIT" .'
+        sh 'docker push vallabh4/numeric:"GIT_COMMIT"'
+      }
+    }
 }
 }
