@@ -6,6 +6,7 @@ pipeline {
         kind: Pod
         metadata:
           name: jenkins-agent
+          namespace: jenkins
         spec:
           nodeName: 'ip-172-31-4-194.ap-south-1.compute.internal'
           containers:
@@ -15,17 +16,22 @@ pipeline {
             - cat
             tty: true
           - name: docker
-            image: docker:latest
+            image: docker:dind
+            securityContext:
+              privileged: true
             command:
-            - cat
-            tty: true
+            - dockerd
+            args:
+            - --host=tcp://127.0.0.1:2375
+            - --host=unix:///var/run/docker.sock
             volumeMounts:
-            - name: docker-sock
-              mountPath: /var/run/docker.sock
+            - name: cache
+              mountPath: "/root"
+              readOnly: false
           volumes:
-          - name: docker-sock
-            hostPath:
-              path: /var/run/docker.sock
+          - name: cache
+            persistentVolumeClaim:
+              claimName: jenkins
         '''
     }
   }
