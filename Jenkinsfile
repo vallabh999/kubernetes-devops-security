@@ -1,10 +1,13 @@
 pipeline {
-    agent {
+  agent {
     kubernetes {
       yaml '''
         apiVersion: v1
         kind: Pod
+        metadata:
+          name: jenkins-agent
         spec:
+          nodeName: 'ip-172-31-4-194.ap-south-1.compute.internal'
           containers:
           - name: maven
             image: maven:alpine
@@ -17,12 +20,12 @@ pipeline {
             - cat
             tty: true
             volumeMounts:
-             - mountPath: /var/run/docker.sock
-               name: docker-sock
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
           volumes:
           - name: docker-sock
             hostPath:
-              path: /var/run/docker.sock    
+              path: /var/run/docker.sock
         '''
     }
   }
