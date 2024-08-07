@@ -66,8 +66,8 @@ pipeline {
         container ('docker'){
           withDockerRegistry([credentialsId: "docker-hub", url: ""]){
             sh 'printenv'
-            sh 'docker build -t vallabh4/numeric:"GIT_COMMIT" .'
-            sh 'docker push vallabh4/numeric:"GIT_COMMIT"'
+            sh 'docker build -t vallabh4/numeric:${env.GIT_COMMIT} .'
+            sh 'docker push vallabh4/numeric:${env.GIT_COMMIT}'
             }
         }
       }
