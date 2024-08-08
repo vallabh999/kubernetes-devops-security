@@ -28,15 +28,15 @@ pipeline {
             - name: cache
               mountPath: "/root"
               readOnly: false
-            - name: docker-sock
-              mountPath: /var/run/docker.sock
+            // - name: docker-sock
+            //   mountPath: /var/run/docker.sock
           volumes:
           - name: cache
             persistentVolumeClaim:
               claimName: jenkins
-          - name: docker-sock
-            hostPath:
-              path: /var/run/docker.sock
+          // - name: docker-sock
+          //   hostPath:
+          //     path: /var/run/docker.sock
         '''
     }
   }
