@@ -58,7 +58,7 @@ pipeline {
       stage('Vulnerability Scan - Docker') {
             steps {
               container ('docker') {
-                  sh "bash trivy-docker-image-scan.sh"
+                  sh "sh trivy-docker-image-scan.sh"
               }
             }
 }
