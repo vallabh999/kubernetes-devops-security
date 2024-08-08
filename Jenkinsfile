@@ -81,11 +81,12 @@ pipeline {
         }
       }
     }
-  //   post {
-  //     always {
-  //       junit 'target/surefire-reports/*.xml'
-  //       jacoco execPattern: 'target/jacoco.exe'
-  //   }
-  // }
+     post {
+       always {
+         junit 'target/surefire-reports/*.xml'
+         jacoco execPattern: 'target/jacoco.exe'
+         dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+     }
+   }
 }
 }
