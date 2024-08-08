@@ -4,7 +4,14 @@ dockerImageName=$(awk 'NR==1 {print $2}' Dockerfile)
 echo $dockerImageName
 echo $WORKSPACE
 echo `pwd`
-echo 'docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 0 --severity HIGH --light $dockerImageName'
+echo 'docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 0 --severity HIGH --light ${dockerImageName}'
+
+# Ensure Docker is available
+if ! docker ps > /dev/null 2>&1; then
+  echo "Docker daemon is not running or not accessible."
+  exit 1
+fi
+
 docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 0 --severity HIGH --light $dockerImageName
 docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.17.2 -q image --exit-code 1 --severity CRITICAL --light $dockerImageName
 
