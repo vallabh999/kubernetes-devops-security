@@ -54,6 +54,7 @@ pipeline {
                 sh "mvn test"
                 }  
             }
+      }
       stage('Vulnerability Scan - Docker') {
             steps {
               parallel(
@@ -81,11 +82,10 @@ pipeline {
         }
       }
     }
-      post {
-    always {
-      junit 'target/surefire-reports/*.xml'
-      jacoco execPattern: 'target/jacoco.exe'
+    post {
+      always {
+        junit 'target/surefire-reports/*.xml'
+        jacoco execPattern: 'target/jacoco.exe'
     }
   }
-}
 }
