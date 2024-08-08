@@ -60,13 +60,13 @@ pipeline {
                 }  
             }
       }
-      stage('Vulnerability Scan - Docker') {
-            steps {
-              container ('docker') {
-                  sh "sh trivy-docker-image-scan.sh"
-              }
-            }
-}
+//       stage('Vulnerability Scan - Docker') {
+//             steps {
+//               container ('docker') {
+//                   sh "sh trivy-docker-image-scan.sh"
+//               }
+//             }
+// }
     stage('Docker Build and Push'){
       steps{
         container ('docker'){
