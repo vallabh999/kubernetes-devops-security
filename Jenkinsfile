@@ -61,12 +61,21 @@ pipeline {
             }
       }
       stage('Vulnerability Scan - Docker') {
-            steps {
-              container ('docker') {
-                  sh "sh trivy-docker-image-scan.sh"
+        steps {
+          parallel (
+            "Trivy Scan": {
+              container('docker') {
+                sh "sh trivy-docker-image-scan.sh"
+              }
+            },
+            "OPA Scan": {
+              container('docker') {
+                sh "docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile"
               }
             }
-}
+          )
+        }
+      }
     stage('Docker Build and Push'){
       steps{
         container ('docker'){
