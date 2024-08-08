@@ -59,6 +59,7 @@ pipeline {
             steps {
               parallel(
                 "Dependency Scan": {
+                  sh 'mkdir -p target'
                   sh "mvn dependency-check:check"
             },
             // "Trivy Scan":{
