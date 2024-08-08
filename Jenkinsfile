@@ -57,6 +57,7 @@ pipeline {
       }
       stage('Vulnerability Scan - Docker') {
             steps {
+              container ('docker') {
               parallel(
             //     "Dependency Scan": {
             //       sh 'mkdir -p target'
@@ -69,6 +70,7 @@ pipeline {
             //   sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
             // }   	
               )
+              }
             }
 }
     stage('Docker Build and Push'){
