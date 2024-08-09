@@ -38,7 +38,12 @@ pipeline {
   tools {
     maven 'maven3'
   }
-
+  environment {
+    deploymentName = "devsecops"
+    containerName = "devsecops-container"
+    serviceName = "devsecops-svc"
+    imageName = "vallabh4/numeric:${GIT_COMMIT}"
+  }
   stages {
       stage('Build Artifact') {
             steps {
