@@ -53,7 +53,7 @@ pipeline {
               }
             }
       }
-      stage('Unit test') {
+      stage('Unit Test - JUnit and JaCoCo') {
             steps {
                 container ('maven'){
                 sh "mvn test"
