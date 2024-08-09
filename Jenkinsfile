@@ -92,12 +92,12 @@ pipeline {
           },
           "Kubesec Scan": {
             container('docker') {
-            sh "bash kubesec-scan.sh"
+            sh "sh kubesec-scan.sh"
           }
           },
           "Trivy Scan": {
             container('docker') {
-            sh "bash trivy-k8s-scan.sh"
+            sh "sh trivy-k8s-scan.sh"
           }
           }
         )
