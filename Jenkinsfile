@@ -86,13 +86,19 @@ pipeline {
       steps {
         parallel(
           "OPA Scan": {
+            container('docker') {
             sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
+          }
           },
           "Kubesec Scan": {
+            container('docker') {
             sh "bash kubesec-scan.sh"
+          }
           },
           "Trivy Scan": {
+            container('docker') {
             sh "bash trivy-k8s-scan.sh"
+          }
           }
         )
       }
