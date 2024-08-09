@@ -23,7 +23,7 @@ pipeline {
             - sh
             - -c
             args:
-            - apk add --no-cache jq && dockerd --host=tcp://127.0.0.1:2375 --host=unix:///var/run/docker.sock
+            - apk add --no-cache curl jq && dockerd --host=tcp://127.0.0.1:2375 --host=unix:///var/run/docker.sock
             volumeMounts:
             - name: cache
               mountPath: "/root"
