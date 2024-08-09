@@ -20,23 +20,18 @@ pipeline {
             securityContext:
               privileged: true
             command:
-            - dockerd
+            - sh
+            - -c
             args:
-            - --host=tcp://127.0.0.1:2375
-            - --host=unix:///var/run/docker.sock
+            - apk add --no-cache jq && dockerd --host=tcp://127.0.0.1:2375 --host=unix:///var/run/docker.sock
             volumeMounts:
             - name: cache
               mountPath: "/root"
               readOnly: false
-            // - name: docker-sock
-            //   mountPath: /var/run/docker.sock
           volumes:
           - name: cache
             persistentVolumeClaim:
               claimName: jenkins
-          // - name: docker-sock
-          //   hostPath:
-          //     path: /var/run/docker.sock
         '''
     }
   }
