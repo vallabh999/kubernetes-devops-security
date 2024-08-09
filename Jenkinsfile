@@ -15,6 +15,11 @@ pipeline {
             command:
             - cat
             tty: true
+          - name: kubectl
+            image: bitnami/kubectl:latest
+            command:
+            - cat
+            tty: true
           - name: docker
             image: docker:dind
             securityContext:
