@@ -1,19 +1,19 @@
 #!/bin/bash
 
-#k8s-deployment.sh
-echo $KUBECONFIG
+# k8s-deployment.sh
 
+# Print environment variables
+echo "KUBECONFIG path: $KUBECONFIG"
+echo "Image name: $imageName"
+echo "Deployment name: $deploymentName"
+echo "Container name: $containerName"
+
+# Replace placeholder in YAML file
 sed -i "s#replace#${imageName}#g" k8s_deployment_service.yaml
-# kubectl -n default get deployment ${deploymentName} > /dev/null
 
-# if [[ $? -ne 0 ]]; then
-#     echo "deployment ${deploymentName} doesnt exist"
-#     kubectl -n default apply -f k8s_deployment_service.yaml
-# else
-#     echo "deployment ${deploymentName} exist"
-#     echo "image name - ${imageName}"
-#     kubectl -n default set image deploy ${deploymentName} ${containerName}=${imageName} --record=true
-# fi
-
-
+# Apply the deployment
 kubectl -n app apply -f k8s_deployment_service.yaml --kubeconfig=$KUBECONFIG
+
+# Print kubectl version and context for debugging
+kubectl version --client
+kubectl config current-context
