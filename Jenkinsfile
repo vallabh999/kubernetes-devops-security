@@ -117,31 +117,32 @@ pipeline {
         )
       }
     }
-    stage('K8S Deployment - DEV') {
-      steps {
-        parallel(
-          "Deployment": {
-            container('container-tools') {
-            // withKubeConfig([credentialsId: 'kubeconfig']) {
-              // sh "bash k8s-deployment.sh"
-              sh """
-                  echo $KUBECONFIG
-                  sed -i "s#replace#${imageName}#g" k8s_deployment_service.yaml
-                  kubectl -n app apply -f k8s_deployment_service.yaml --kubeconfig=$KUBECONFIG
-                """
-              }
-            // }
-          },
-          "Rollout Status": {
-            container('container-tools') {
-            // withKubeConfig([credentialsId: 'kubeconfig']) {
-              sh "echo $KUBECONFIG"
-            // }
-            }
+stage('K8S Deployment - DEV') {
+  steps {
+    parallel(
+      "Deployment": {
+        container('container-tools') {
+          withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+            sh """
+                echo "KUBECONFIG path: $KUBECONFIG"
+                sed -i "s#replace#${imageName}#g" k8s_deployment_service.yaml
+                kubectl -n app apply -f k8s_deployment_service.yaml --kubeconfig=$KUBECONFIG
+            """
           }
-        )
+        }
+      },
+      "Rollout Status": {
+        container('container-tools') {
+          withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+            sh "echo KUBECONFIG path: $KUBECONFIG"
+            // Add additional commands to check rollout status here
+          }
+        }
       }
-    }
+    )
+  }
+}
+
     
   }
      post {
