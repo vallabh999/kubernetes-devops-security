@@ -15,10 +15,12 @@ pipeline {
             command:
             - cat
             tty: true
-          - name: kubectl
-            image: bitnami/kubectl:latest
+          - name: container-tools
+            image: vallabh4/container-tools:latest
             command:
-            - cat
+            - sleep
+            args:
+            - 99d
             tty: true
           - name: docker
             image: docker:dind
@@ -48,6 +50,7 @@ pipeline {
     containerName = "devsecops-container"
     serviceName = "devsecops-svc"
     imageName = "vallabh4/numeric:${GIT_COMMIT}"
+    KUBECONFIG = credentials('kube-config')
   }
   stages {
       stage('Build Artifact') {
@@ -109,6 +112,26 @@ pipeline {
             container('docker') {
             sh "sh trivy-k8s-scan.sh"
           }
+          }
+        )
+      }
+    }
+    stage('K8S Deployment - DEV') {
+      steps {
+        parallel(
+          "Deployment": {
+            container('container-tools') {
+            // withKubeConfig([credentialsId: 'kubeconfig']) {
+              sh "bash k8s-deployment.sh"
+            // }
+            }
+          },
+          "Rollout Status": {
+            container('container-tools') {
+            // withKubeConfig([credentialsId: 'kubeconfig']) {
+              sh "bash k8s-deployment-rollout-status.sh"
+            // }
+            }
           }
         )
       }
