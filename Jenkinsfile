@@ -8,6 +8,7 @@ pipeline {
           name: jenkins-agent
           namespace: jenkins
         spec:
+          serviceAccountName: jenkins-deployer
           nodeName: 'ip-172-31-4-194.ap-south-1.compute.internal'
           containers:
           - name: maven
