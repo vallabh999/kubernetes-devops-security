@@ -131,7 +131,6 @@ pipeline {
                 """
               }
             // }
-            }
           },
           "Rollout Status": {
             container('container-tools') {
