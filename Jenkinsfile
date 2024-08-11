@@ -122,7 +122,7 @@ stage('K8S Deployment - DEV') {
     parallel(
       "Deployment": {
         container('container-tools') {
-          withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+          withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
             sh """
                 echo "KUBECONFIG path: $KUBECONFIG"
                 sed -i "s#replace#${imageName}#g" k8s_deployment_service.yaml
@@ -133,7 +133,7 @@ stage('K8S Deployment - DEV') {
       },
       "Rollout Status": {
         container('container-tools') {
-          withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+          withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
             sh "echo KUBECONFIG path: $KUBECONFIG"
             // Add additional commands to check rollout status here
           }
