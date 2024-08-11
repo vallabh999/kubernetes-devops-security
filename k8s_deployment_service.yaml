@@ -16,12 +16,12 @@ spec:
       labels:
         app: devsecops
     spec:
-      serviceAccountName: default
+      serviceAccountName: jenkins-deployer
       volumes:
       - name: vol
         emptyDir: {}
       containers:
-      - image: replace
+      - image: vallabh4/numeric:latest
         name: devsecops-container
         volumeMounts:
           - mountPath: /tmp
