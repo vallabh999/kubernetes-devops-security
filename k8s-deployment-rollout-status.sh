@@ -3,7 +3,15 @@
 #k8s-deployment-rollout-status.sh
 
 sleep 60s
-echo $KUBECONFIG
+
+export KUBECONFIG=$KUBECONFIG
+echo "KUBECONFIG path: $KUBECONFIG"
+echo "Image name: $imageName"
+echo "Deployment name: $deploymentName"
+echo "Container name: $containerName"
+
+kubectl auth can-i get deployments --as=system:serviceaccount:jenkins:jenkins-deployer --namespace=app
+kubectl auth can-i create services --as=system:serviceaccount:jenkins:jenkins-deployer --namespace=app
 
 if [[ $(kubectl -n app rollout status deploy ${deploymentName} --timeout 5s --kubeconfig=$KUBECONFIG) != *"successfully rolled out"* ]]; 
 then     
