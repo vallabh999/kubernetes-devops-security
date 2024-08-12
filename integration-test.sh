@@ -7,7 +7,7 @@ applicationURL="http://3.110.107.159"
 applicationURI="/"
 serviceName="devsecops-svc"
 
-PORT=$(kubectl -n app get $serviceName -o json | jq '.spec.ports[] | select(.nodePort != null) | .nodePort')
+PORT=$(kubectl -n app get svc/$serviceName -o json | jq '.spec.ports[] | select(.nodePort != null) | .nodePort')
 
 echo $PORT
 echo $applicationURL:$PORT/$applicationURI
