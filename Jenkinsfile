@@ -132,16 +132,26 @@ stage('K8S Deployment - DEV') {
       },
       "Rollout Status": {
         container('container-tools') {
-          withAWS(credentials: 'aws',region: 'ap-south-1') {
             sh 'bash k8s-deployment-rollout-status.sh'
-            // Add additional commands to check rollout status here
-          }
         }
       }
     )
   }
 }
-
+stage('Integration Tests - DEV') {
+      steps {
+         container('container-tools') {
+          script {
+            try {
+                sh "bash integration-test.sh"
+            } catch (e) {
+                sh "kubectl -n default rollout undo deploy ${deploymentName}"
+              throw e
+            }
+          }
+         }
+      }
+    }
     
   }
      post {
