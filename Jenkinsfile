@@ -122,9 +122,10 @@ stage('K8S Deployment - DEV') {
       "Deployment": {
         container('container-tools') {
           withAWS(credentials: 'aws',region: 'ap-south-1') {
-            sh 'aws s3 ls' // List S3 buckets to test AWS credentials
+            // sh 'aws s3 ls' // List S3 buckets to test AWS credentials
             sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
             sh 'sed -i "s#replace#${imageName}#g" k8s_deployment_service.yaml'
+            sh 'cat k8s_deployment_service.yaml'
             sh 'kubectl -n app apply -f k8s_deployment_service.yaml'
           }
         }
