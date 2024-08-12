@@ -169,7 +169,7 @@ stage('K8S Deployment - DEV') {
     stage('OWASP ZAP - DAST') {
       steps {
         container('docker') {
-            sh 'bash zap.sh'
+            sh 'sh zap.sh'
         }
       }
     }
