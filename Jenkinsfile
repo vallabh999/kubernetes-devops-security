@@ -168,13 +168,10 @@ stage('K8S Deployment - DEV') {
 //     }
     stage('OWASP ZAP - DAST') {
       steps {
-        container('container-tools') {
-          withAWS(credentials: 'aws',region: 'ap-south-1') {
-            sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
+        container('docker') {
             sh 'bash zap.sh'
         }
       }
-    }
     }
 
  //    stage('Prompte to PROD?') {
