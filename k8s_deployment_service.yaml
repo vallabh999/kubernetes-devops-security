@@ -21,7 +21,7 @@ spec:
       - name: vol
         emptyDir: {}
       containers:
-      - image: vallabh4/numeric:latest
+      - image: replace
         name: devsecops-container
         volumeMounts:
           - mountPath: /tmp
