@@ -51,6 +51,8 @@ pipeline {
     serviceName = "devsecops-svc"
     imageName = "vallabh4/numeric:${GIT_COMMIT}"
     KUBECONFIG = credentials('kube-config')
+    applicationURI="/increment/99"
+    applicationURL="http://3.110.107.159"
   }
   stages {
       stage('Build Artifact') {
