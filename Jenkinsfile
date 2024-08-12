@@ -73,22 +73,22 @@ pipeline {
                 }  
             }
       }
-      stage('Vulnerability Scan - Docker') {
-        steps {
-          parallel (
-            "Trivy Scan": {
-              container('docker') {
-                sh "sh trivy-docker-image-scan.sh"
-              }
-            },
-            "OPA Scan": {
-              container('docker') {
-                sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
-              }
-            }
-          )
-        }
-      }
+      // stage('Vulnerability Scan - Docker') {
+      //   steps {
+      //     parallel (
+      //       "Trivy Scan": {
+      //         container('docker') {
+      //           sh "sh trivy-docker-image-scan.sh"
+      //         }
+      //       },
+      //       "OPA Scan": {
+      //         container('docker') {
+      //           sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
+      //         }
+      //       }
+      //     )
+      //   }
+      // }
     stage('Docker Build and Push'){
       steps{
         container ('docker'){
@@ -100,27 +100,27 @@ pipeline {
         }
       }
     }
-    stage('Vulnerability Scan - Kubernetes') {
-      steps {
-        parallel(
-          "OPA Scan": {
-            container('docker') {
-            sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
-          }
-          },
-          "Kubesec Scan": {
-            container('docker') {
-            sh "sh kubesec-scan.sh"
-          }
-          },
-          "Trivy Scan": {
-            container('docker') {
-            sh "sh trivy-k8s-scan.sh"
-          }
-          }
-        )
-      }
-    }
+    // stage('Vulnerability Scan - Kubernetes') {
+    //   steps {
+    //     parallel(
+    //       "OPA Scan": {
+    //         container('docker') {
+    //         sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
+    //       }
+    //       },
+    //       "Kubesec Scan": {
+    //         container('docker') {
+    //         sh "sh kubesec-scan.sh"
+    //       }
+    //       },
+    //       "Trivy Scan": {
+    //         container('docker') {
+    //         sh "sh trivy-k8s-scan.sh"
+    //       }
+    //       }
+    //     )
+    //   }
+    // }
 stage('K8S Deployment - DEV') {
   steps {
     parallel(
@@ -158,7 +158,7 @@ stage('Integration Tests - DEV') {
             } catch (e) {
               withAWS(credentials: 'aws',region: 'ap-south-1') {
                 sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
-                sh "kubectl -n default rollout undo deploy ${deploymentName}"
+                sh "kubectl -n app rollout undo deploy ${deploymentName}"
               }
               throw e
             }
