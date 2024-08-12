@@ -1,6 +1,7 @@
 #!/bin/bash
 
-PORT=$(kubectl -n app get svc ${serviceName} -o json | jq .spec.ports[].nodePort)
+applicationURL=""
+PORT=$(kubectl -n app get svc/$serviceName -o json | jq '.spec.ports[] | select(.nodePort != null) | .nodePort')
 
 # first run this
 chmod 777 $(pwd)
