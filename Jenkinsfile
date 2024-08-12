@@ -18,9 +18,12 @@ pipeline {
           - name: container-tools
             image: vallabh4/container-tools:latest
             command:
-            - sleep
+            - /bin/sh
             args:
-            - 99d
+            - -c
+            - |
+              apt-get update && apt-get install -y jq
+              sleep 99d
             tty: true
           - name: docker
             image: docker:dind
