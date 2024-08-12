@@ -2,8 +2,8 @@ package main
 
 deny[msg] {
   input.kind = "Service"
-  not input.spec.type = "ClusterIP"
-  msg = "Service type should be ClusterIP"
+  not input.spec.type = "NodePort"
+  msg = "Service type should be NodePort"
 }
 
 deny[msg] {
