@@ -13,7 +13,7 @@ echo "Container name: $containerName"
 # kubectl auth can-i get deployments --as=system:serviceaccount:jenkins:jenkins-deployer --namespace=app
 # kubectl auth can-i create services --as=system:serviceaccount:jenkins:jenkins-deployer --namespace=app
 
-if [[ $(kubectl -n app rollout status deploy ${deploymentName} --timeout 5s) != *"successfully rolled out"* ]]; 
+if [[ $(kubectl -n app rollout status deploy ${deploymentName} --timeout 30s) != *"successfully rolled out"* ]]; 
 then     
 	echo "Deployment ${deploymentName} Rollout has Failed"
     kubectl -n app rollout undo deploy ${deploymentName}
