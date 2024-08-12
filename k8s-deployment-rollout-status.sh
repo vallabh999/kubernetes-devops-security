@@ -2,7 +2,7 @@
 
 #k8s-deployment-rollout-status.sh
 
-sleep 60s
+sleep 30s
 
 # export KUBECONFIG=$KUBECONFIG
 # echo "KUBECONFIG path: $KUBECONFIG"
