@@ -174,13 +174,60 @@ stage('K8S Deployment - DEV') {
       }
     }
 
- //    stage('Prompte to PROD?') {
- //      steps {
- //        timeout(time: 2, unit: 'DAYS') {
- //          input 'Do you want to Approve the Deployment to Production Environment/Namespace?'
- //        }
- //      }
- //    }
+    stage('Prompte to PROD?') {
+      steps {
+        timeout(time: 2, unit: 'DAYS') {
+          input 'Do you want to Approve the Deployment to Production Environment/Namespace?'
+        }
+      }
+    }
+
+stage('K8S Deployment - PROD') {
+  steps {
+    parallel(
+      "Deployment": {
+        container('container-tools') {
+          withAWS(credentials: 'aws',region: 'ap-south-1') {
+            // sh 'aws s3 ls' // List S3 buckets to test AWS credentials
+            sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
+            sh 'sed -i "s#replace#${imageName}#g" k8s_deployment_service_prod.yaml'
+            sh 'cat k8s_deployment_service_prod.yaml'
+            sh 'kubectl -n prod apply -f k8s_deployment_service_prod.yaml'
+          }
+        }
+      },
+      "Rollout Status": {
+        container('container-tools') {
+          withAWS(credentials: 'aws',region: 'ap-south-1') {
+            sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
+            sh 'bash k8s-deployment-rollout-status-prod.sh'
+        }
+        }
+      }
+    )
+  }
+}
+    stage('Integration Tests - PROD') {
+      steps {
+         container('container-tools') {
+          script {
+            try {
+              withAWS(credentials: 'aws',region: 'ap-south-1') {
+                sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
+                sh "bash integration-test-prod.sh"
+              }
+            } catch (e) {
+              withAWS(credentials: 'aws',region: 'ap-south-1') {
+                sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
+                sh "kubectl -n prod rollout undo deploy ${deploymentName}"
+              }
+              throw e
+            }
+          }
+         }
+      }
+    }
+    
   }
      post {
        always {
