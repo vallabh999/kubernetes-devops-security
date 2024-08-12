@@ -1,8 +1,9 @@
 #!/bin/bash
 
-applicationURL=""
-PORT=$(kubectl -n app get svc/$serviceName -o json | jq '.spec.ports[] | select(.nodePort != null) | .nodePort')
-
+applicationURL="http://3.110.107.159"
+# PORT=$(kubectl -n app get svc/$serviceName -o json | jq '.spec.ports[] | select(.nodePort != null) | .nodePort')
+url=$applicationURL:31701/v3/api-docs
+echo $url
 # first run this
 chmod 777 $(pwd)
 echo $(id -u):$(id -g)
@@ -10,7 +11,7 @@ echo $(id -u):$(id -g)
 
 
 # comment above cmd and uncomment below lines to run with CUSTOM RULES
-docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-api-scan.py -t $applicationURL:$PORT/v3/api-docs -f openapi -c zap_rules -r zap_report.html
+docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-api-scan.py -t $applicationURL:31701/v3/api-docs -f openapi -c zap_rules -r zap_report.html
 
 exit_code=$?
 
