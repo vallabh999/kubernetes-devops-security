@@ -134,7 +134,10 @@ stage('K8S Deployment - DEV') {
       },
       "Rollout Status": {
         container('container-tools') {
+          withAWS(credentials: 'aws',region: 'ap-south-1') {
+            sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
             sh 'bash k8s-deployment-rollout-status.sh'
+        }
         }
       }
     )
@@ -145,9 +148,15 @@ stage('Integration Tests - DEV') {
          container('container-tools') {
           script {
             try {
+              withAWS(credentials: 'aws',region: 'ap-south-1') {
+                sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
                 sh "bash integration-test.sh"
+              }
             } catch (e) {
+              withAWS(credentials: 'aws',region: 'ap-south-1') {
+                sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
                 sh "kubectl -n default rollout undo deploy ${deploymentName}"
+              }
               throw e
             }
           }
