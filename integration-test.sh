@@ -4,13 +4,13 @@
 
 sleep 5s
 applicationURL="http://3.110.107.159"
-applicationURI="/"
+# applicationURI="/"
 serviceName="devsecops-svc"
 
 PORT=$(kubectl -n app get svc/$serviceName -o json | jq '.spec.ports[] | select(.nodePort != null) | .nodePort')
 
 echo $PORT
-echo $applicationURL:$PORT/$applicationURI
+echo $applicationURL:$PORT  #/$applicationURI
 
 if [[ ! -z "$PORT" ]];
 then
