@@ -128,20 +128,12 @@ stage('K8S Deployment - DEV') {
             sh 'sed -i "s#replace#${imageName}#g" k8s_deployment_service.yaml'
             sh 'kubectl -n app apply -f k8s_deployment_service.yaml'
           }
-          // withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
-          //   sh """
-          //       echo "KUBECONFIG path: $KUBECONFIG"
-          //       sed -i "s#replace#${imageName}#g" k8s_deployment_service.yaml
-          //       kubectl -n app apply -f k8s_deployment_service.yaml --kubeconfig=$KUBECONFIG
-          //   """
-          // }
         }
       },
       "Rollout Status": {
         container('container-tools') {
           withAWS(credentials: 'aws',region: 'ap-south-1') {
-            sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
-            sh 'cat /root/.kube/config'
+            sh 'bash k8s-deployment-rollout-status.sh'
             // Add additional commands to check rollout status here
           }
         }
