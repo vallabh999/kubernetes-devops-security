@@ -16,7 +16,7 @@ spec:
       labels:
         app: devsecops
     spec:
-      serviceAccountName: jenkins-deployer
+      # serviceAccountName: jenkins-deployer
       volumes:
       - name: vol
         emptyDir: {}
