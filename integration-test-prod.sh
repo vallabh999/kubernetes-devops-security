@@ -2,7 +2,7 @@
 
 #integration-test.sh
 
-sleep 20s
+sleep 30s
 applicationURL="http://3.110.107.159"
 # applicationURI="/"
 serviceName="devsecops-svc"
