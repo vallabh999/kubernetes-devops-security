@@ -146,26 +146,26 @@ stage('K8S Deployment - DEV') {
     )
   }
 }
-// stage('Integration Tests - DEV') {
-//       steps {
-//          container('container-tools') {
-//           script {
-//             try {
-//               withAWS(credentials: 'aws',region: 'ap-south-1') {
-//                 sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
-//                 sh "bash integration-test.sh"
-//               }
-//             } catch (e) {
-//               withAWS(credentials: 'aws',region: 'ap-south-1') {
-//                 sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
-//                 sh "kubectl -n app rollout undo deploy ${deploymentName}"
-//               }
-//               throw e
-//             }
-//           }
-//          }
-//       }
-//     }
+stage('Integration Tests - DEV') {
+      steps {
+         container('container-tools') {
+          script {
+            try {
+              withAWS(credentials: 'aws',region: 'ap-south-1') {
+                sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
+                sh "bash integration-test.sh"
+              }
+            } catch (e) {
+              withAWS(credentials: 'aws',region: 'ap-south-1') {
+                sh 'aws eks update-kubeconfig --region ap-south-1 --name shri'
+                sh "kubectl -n app rollout undo deploy ${deploymentName}"
+              }
+              throw e
+            }
+          }
+         }
+      }
+    }
     // stage('OWASP ZAP - DAST') {
     //   steps {
     //     container('docker') {
